@@ -1,88 +1,127 @@
-#include<stdio.h>
-#include<conio.h>
-#include<windows.h>
+#include <stdio.h>
+#include <conio.h>
+#include <windows.h>
 
-int count_test() {
-	int counter = 0;
-	
-	while (1)
-	{	
-		if (GetAsyncKeyState(VK_UP) != 0)
-		{
-			printf("Key Down : Set(+)\n");
-			//counter 
-			if (GetAsyncKeyState(VK_UP) == 0)
-			{
-				printf("떼짐"); //여기서 본함수 동작 -> Bool 동작
-				break; //
-			}
-		}
+typedef enum {
+	InputKey_Idle = 0,
+	InputKey_Cruise,
+	InputKey_SetAccel_Short,
+	InputKey_SetAccel_Long,
+	InputKey_ResDecel_Short,
+	InputKey_ResDecel_Long,
+	InputKey_Cancel,
+	InputKey_Max
+} eInputKey;
 
-		if (GetAsyncKeyState(VK_DOWN) != 0)
-		{
-			printf("Key Down : Res(-)\n");
-			//counter 
-			if (GetAsyncKeyState(VK_DOWN) == 0)
-			{
-				printf("떼짐");
-				break;
-			}
-		}
+typedef enum {
+    CRUISE = 0,
+    CANCEL,
+	SET,
+	RES
+} ButtonType;
 
-		if (GetAsyncKeyState(VK_RIGHT) != 0)
-		{
-			printf("Key Down : Cancel\n");
-			//counter 
-			if (GetAsyncKeyState(VK_RIGHT) == 0)
-			{
-				printf("떼짐");
-				break;
-			}
-		}
+int Press_Button_Interface() {
 
-		if (GetAsyncKeyState(VK_LEFT) != 0)
-		{
-			printf("Key Down : Cruise\n");
-			//counter 
-			if (GetAsyncKeyState(VK_LEFT) == 0)
-			{
-				printf("떼짐");
-				break;
-			}
-		}
+    float Time;
+    int button_case;
+    LARGE_INTEGER BeginTime, EndTime, EndTime300, Frequency;
+    QueryPerformanceFrequency(&Frequency);
+    QueryPerformanceCounter(&BeginTime);
 
-	}
+    while (1)
+    {
 
-	counter = 0; //카운터 초기화
-	return 0;
-	
+        while ((GetAsyncKeyState(VK_UP)))
+        {
+            while ((double)(QueryPerformanceCounter(&EndTime300) - BeginTime.QuadPart) / Frequency.QuadPart == 0.3) {
+                printf("up\n");
+                return InputKey_SetAccel_Long;
+            }
+            QueryPerformanceCounter(&EndTime);
+            button_case = SET;
+        }
 
+        while ((GetAsyncKeyState(VK_DOWN)))
+        {
+            if ((double)(QueryPerformanceCounter(&EndTime300) - BeginTime.QuadPart) / Frequency.QuadPart == 0.3) {
+                return InputKey_ResDecel_Short;
+            }
+            QueryPerformanceCounter(&EndTime);
+            button_case = RES;
+        }
+
+        while ((GetAsyncKeyState(VK_RIGHT)))
+        {
+            QueryPerformanceCounter(&EndTime);
+            button_case = CANCEL;
+        }
+
+        while ((GetAsyncKeyState(VK_LEFT)))
+        {
+            QueryPerformanceCounter(&EndTime);
+            button_case = CRUISE;
+        }
+
+        _getch();
+        break;
+    }
+
+    Time = (double)(EndTime.QuadPart - BeginTime.QuadPart) / Frequency.QuadPart;
+    Time = Time * 1000;
+    printf("%lf\n", Time);
+
+    if (Time >= 50 && Time < 300) {
+        if (button_case == SET) {
+            return InputKey_SetAccel_Short;
+        }
+        else if (button_case == CANCEL) {
+            return InputKey_Cancel;
+        }
+        else if (button_case == CRUISE) {
+            return InputKey_Cruise;
+        }
+        else if (button_case == RES) {
+            return InputKey_ResDecel_Short;
+        }
+        else return InputKey_Idle;
+    }
+    else if (Time < 50) {
+        return InputKey_Idle;
+    }
+    else if (Time >= 300) {
+        if (button_case == SET) {
+            return InputKey_SetAccel_Short;
+        }
+        else if (button_case == RES) {
+            return InputKey_ResDecel_Short;
+        }
+        else return InputKey_Idle;
+    }
 }
 
 
 int main() {
-	int test = 0;
-	int key = 0;
-	LARGE_INTEGER BeginTime, EndTime, Frequency;
-	double Time;
-	
-	
-	while (1) {
-		QueryPerformanceCounter( &BeginTime );
-		printf("입력 대기중\n");
-		while (1) {
-			Time = 0;
-			if (_kbhit()) {
-				count_test();
-				break;
-			}
-		}
-		QueryPerformanceCounter( &EndTime );
-		
-		QueryPerformanceFrequency( &Frequency );
-		Time = (double)( EndTime.QuadPart - BeginTime.QuadPart) / Frequency.QuadPart;
-		printf("%f\n%f\n%f\n",Time, BeginTime, EndTime);
-	}
+    eInputKey e;
+    ButtonType b;
 
-	return 0;
+    int test = 0;
+    int key = 0;
+
+    int s = 0;
+
+    int STATUS_KEY; // 입력버튼 상태 값
+
+    while (1) {
+        printf("입력 대기중\n");
+        while (1) {
+            if (_kbhit()) {
+                STATUS_KEY = Press_Button_Interface();
+                printf("%d\n", STATUS_KEY);
+                _getch();
+                break;
+            }
+        }
+    }
+
+    return 0;
 }
