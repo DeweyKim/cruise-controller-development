@@ -27,7 +27,7 @@ eInputKey Button8 = InputKey_Max;
 int current_spd = 0;
 int target_spd = 0;
 bool cruise_mode_status;
-bool cruise_mode(int current_car_speed, int target_car_speed, bool car_break, bool cancel_button, bool cruise_button, bool is_fault) {
+bool cruise_mode(bool car_break, bool cancel_button, bool cruise_button, bool is_fault) {
     if (is_fault == 1) {
         target_spd = -1;
         return 0;
