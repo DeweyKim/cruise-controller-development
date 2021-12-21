@@ -3,13 +3,10 @@
 #include<windows.h>
 
 int count_test() {
-
 	int counter = 0;
-
+	
 	while (1)
-	{
-
-		
+	{	
 		if (GetAsyncKeyState(VK_UP) != 0)
 		{
 			printf("Key Down : Set(+)\n");
@@ -66,16 +63,25 @@ int count_test() {
 int main() {
 	int test = 0;
 	int key = 0;
-
-
+	LARGE_INTEGER BeginTime, EndTime, Frequency;
+	double Time;
+	
+	
 	while (1) {
+		QueryPerformanceCounter( &BeginTime );
 		printf("입력 대기중\n");
 		while (1) {
+			Time = 0;
 			if (_kbhit()) {
 				count_test();
 				break;
 			}
 		}
+		QueryPerformanceCounter( &EndTime );
+		
+		QueryPerformanceFrequency( &Frequency );
+		Time = (double)( EndTime.QuadPart - BeginTime.QuadPart) / Frequency.QuadPart;
+		printf("%f\n%f\n%f\n",Time, BeginTime, EndTime);
 	}
 
 	return 0;
