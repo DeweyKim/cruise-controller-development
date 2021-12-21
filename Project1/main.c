@@ -1,8 +1,8 @@
 #include <stdio.h>
+#include <stdbool.h>
 
 //cruise_mode_status에서 cruise mode on은 1, cruise mode off는 0
-int cruise_mode(float current_car_speed, float *target_car_speed, char car_break, char cancel_button, char *cruise_mode_status, char cruise_button){
-	float saved_target_car_speed = 0;
+int cruise_mode(int current_car_speed, int *target_car_speed, bool car_break, bool cancel_button, bool *cruise_mode_status, bool cruise_button){
 
 	if (cancel_button == 1 && *target_car_speed != -1) {
 		*cruise_mode_status = 0;
