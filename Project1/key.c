@@ -90,10 +90,10 @@ int Press_Button_Interface() {
     }
     else if (Time >= 300) {
         if (button_case == SET) {
-            return InputKey_SetAccel_Short;
+            return InputKey_SetAccel_Long;
         }
         else if (button_case == RES) {
-            return InputKey_ResDecel_Short;
+            return InputKey_ResDecel_Long;
         }
         else return InputKey_Idle;
     }
