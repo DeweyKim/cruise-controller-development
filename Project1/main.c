@@ -1,59 +1,138 @@
 #include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
+#pragma warning(disable:4996)
+#define MIN_SPD 50;
+#define MAX_SPD 200;
+typedef int bool;
+#define true 1
+#define false 0
 
-//cruise_mode_status에서 cruise mode on은 1, cruise mode off는 0
-int cruise_mode(int *current_car_speed, int *target_car_speed, bool car_break, bool cancel_button, bool *cruise_mode_status, bool cruise_button, bool is_fault) {
-	if (is_fault == 1){
-		*cruise_mode_status = 0;
-		*target_car_speed = -1;
-		return 0;
-	}
+typedef enum {
+    InputKey_Idle = 0,
+    InputKey_Cruise,
+    InputKey_SetAccel_Short,
+    InputKey_SetAccel_Long,
+    InputKey_ResDecel_Short,
+    InputKey_ResDecel_Long,
+    InputKey_Cancel,
+    InputKey_Max
+} eInputKey;
+eInputKey Button1 = InputKey_Idle;
+eInputKey Button2 = InputKey_Cruise;
+eInputKey Button3 = InputKey_SetAccel_Short;
+eInputKey Button4 = InputKey_SetAccel_Long;
+eInputKey Button5 = InputKey_ResDecel_Short;
+eInputKey Button6 = InputKey_ResDecel_Long;
+eInputKey Button7 = InputKey_Cancel;
+eInputKey Button8 = InputKey_Max;
+int current_spd = 0;
+int target_spd = 0;
+bool cruise_mode_status;
+bool cruise_mode(int current_car_speed, int target_car_speed, bool car_break, bool cancel_button, bool cruise_button, bool is_fault) {
+    if (is_fault == 1) {
+        target_spd = -1;
+        return 0;
+    }
 
-	if (cancel_button == 1 && *target_car_speed != -1) {
-		*cruise_mode_status = 0;
-		*target_car_speed = -1;
-		return 0;
-	}
+    if (cancel_button == 1 && target_spd != -1) {
+        target_spd = -1;    
+        return 0;
+    }
 
-	if (car_break == 1 && *target_car_speed != -1) {
-		*cruise_mode_status = 0;
-		return 0;
-	}
+    if (car_break == 1 && target_spd != -1) {
+        return 0;
+    }
 
-	if (*current_car_speed < 50) {
-		*cruise_mode_status = 0;
-		return 0;
-	}
+    if (current_spd < 50) {
+        return 0;
+    }
 
-	if (cruise_button == 1 && *current_car_speed >= 50) {
-		*cruise_mode_status = 1;
-	}
+    if (current_spd >= 50 && cruise_button == 1) {
+        return 1;
+    }
 
-	if (*cruise_mode_status == 1) {
-		if (abs(*current_car_speed - *target_car_speed) <= 1) {
-			*current_car_speed = *target_car_speed;
-		}
-		else if (*current_car_speed < *target_car_speed) {
-			(*current_car_speed) += 2;
-		}
-	}
-	return 0;
+    return 0;
 }
 
-int main() {
-	int current_car_speed = 0;
-	int target_car_speed = 0;
-	bool cruise_status = 0;
-	bool car_break = 0;
-	bool cancel_button = 0;
-	bool cruise_button = 0;
-	bool is_fault = 0;
 
-	while (1) {
-		//브레이크, 캔슬, 크루즈버튼은 키 입력 받아야 함 / fault는 값 입력 받아야 함
-		cruise_mode(&current_car_speed, &target_car_speed, car_break, cancel_button, &cruise_status, cruise_button, is_fault);
-	}
-
-	return 0;
+int Accelerate(bool InputKey_SetAccel_Short, bool InputKey_SetAccel_Long) {
+    if (InputKey_SetAccel_Short == true) {
+        target_spd += 1;
+    }
+    else if (InputKey_SetAccel_Long == true) {
+        target_spd += 5;
+    }
+    else
+    {
+    	/* exception */
+    }
+    if (target_spd >= 200) {
+        target_spd = 200;
+    }
+    return target_spd;
 }
+int Decelerate(bool InputKey_ResDecel_Short, bool InputKey_ResDecel_Long) {
+    if (InputKey_ResDecel_Short == true) {
+        target_spd -= 1;
+    }
+    else if (InputKey_ResDecel_Long == true) {
+        target_spd -= 5;
+    }
+    else
+    {
+    	/* exception */
+    }
+    if (target_spd < 50) {
+        cruise_mode_status = 0;
+    }
+
+    return target_spd;
+}
+int Resume(bool Resume_Button) {
+    return target_spd;
+}
+static void readInput(int value)
+{
+    printf("Input Current Speed : ");
+    scanf("%d", &value);
+    current_spd = value;
+    target_spd = value;
+}
+static void pushButton(bool value)
+{
+    scanf("%d", &value);
+    if (current_spd >= 50 && value == 1) {
+        Button2 = value;
+        printf("===Cruise Mode On===\n");
+    }
+    else {
+        Button2 = false;
+        printf("===Cruise Mode Off===\n");
+    }
+    
+}
+int main(int argc, char* argv[]) {
+    
+    bool car_brake = 0;         //브레이크 동작상태
+
+    bool cancel_btn = 0;        //Cancel버튼 동작상태
+    bool cruise_btn = 1;        //크루즈버튼 동작상태
+
+    bool is_fault = 0;          //Fault처리
+
+    readInput(&current_spd);
+    cruise_mode_status=cruise_mode(current_spd, target_spd, car_brake, cancel_btn, cruise_btn, is_fault);
+    if (cruise_mode_status == 1) {
+        printf("Cruise Mode On");
+    }
+    else {
+        printf("Cruise Mode Off");
+    }
+    
+
+   
+	return 0;
+}   
+
+
+
+
