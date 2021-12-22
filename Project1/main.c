@@ -62,7 +62,7 @@ bool cruise_mode(int current_spd, bool car_brake, bool cancel_button, bool cruis
     }
 
     else if (current_spd < 50) {
-        printf("기준속도 미만입니다\n");
+        printf("���ؼӵ� �̸��Դϴ�\n");
         return 0;
     }
 
@@ -70,6 +70,10 @@ bool cruise_mode(int current_spd, bool car_brake, bool cancel_button, bool cruis
         printf("Cruise Mode On\n");
         target_spd = current_spd;
         return 1;
+    }
+    else
+    {
+    	/* exception */
     }
     return 0;
 }
@@ -197,9 +201,9 @@ int Press_Button_Interface() {
             else if (button_case == RES) {
                 return InputKey_ResDecel_Short;
             }
-            else return InputKey_Idle;
+            else  { return InputKey_Idle; } 
         }
-        else { //300이상 눌린 상태에서 나머지 extra time 처리
+        else { //300�̻� ���� ���¿��� ������ extra time ó��
             extra_time = 0;
             return InputKey_Idle;
         }
@@ -215,7 +219,11 @@ int Press_Button_Interface() {
         else if (button_case == RES) {
             return InputKey_ResDecel_Long;
         }
-        else return InputKey_Idle;
+        else  { return InputKey_Idle; } 
+    }
+    else
+    {
+    	/* exception */
     }
 
     return 0;
@@ -230,11 +238,11 @@ int alram_flag(bool veh_speed, bool veh_ready, bool lgon, bool can_fault, bool c
     bool can_timeout = false;
     bool cruise_button = false;
     */
-    if (veh_ready == false) {       //차량 Ready 해제
+    if (veh_ready == false) {       //���� Ready ����
         alarmflag = 0x00;
         return alarmflag;
     }
-    if (lgon == false) {            //lgOn신호 Reset
+    if (lgon == false) {            //lgOn��ȣ Reset
         alarmflag = 0x01;
         return alarmflag;
     }
@@ -246,7 +254,7 @@ int alram_flag(bool veh_speed, bool veh_ready, bool lgon, bool can_fault, bool c
         alarmflag = 0x03;
         return alarmflag;
     }
-    if (veh_speed < 50) {           // 현재 차속 50km 미만인 경우 버튼 입력 받았을 때
+    if (veh_speed < 50) {           // ���� ���� 50km �̸��� ��� ��ư �Է� �޾��� ��
         if (cruise_button == true) {
             alarmflag = 0x04;
             return alarmflag;
@@ -256,15 +264,15 @@ int alram_flag(bool veh_speed, bool veh_ready, bool lgon, bool can_fault, bool c
 }
 int main(int argc, char* argv[]) {
 
-    bool car_brake = 0;         //브레이크 동작상태
-    bool cancel_btn = 0;        //Cancel버튼 동작상태
-    bool cruise_btn = 1;        //크루즈버튼 동작상태
-    bool is_fault = 0;          //Fault처리
+    bool car_brake = 0;         //�극��ũ ���ۻ���
+    bool cancel_btn = 0;        //Cancel��ư ���ۻ���
+    bool cruise_btn = 1;        //ũ�����ư ���ۻ���
+    bool is_fault = 0;          //Faultó��
 
     eInputKey e;
     ButtonType b;
 
-    int STATUS_KEY = 0; // 입력버튼 상태 값
+    int STATUS_KEY = 0; // �Է¹�ư ���� ��
 
     int value = 0;
 
@@ -285,29 +293,33 @@ int main(int argc, char* argv[]) {
                 }
                 else if (STATUS_KEY == InputKey_SetAccel_Short && cruise_mode_status == 1) {
                     Accelerate(1, 0);
-                    printf("목표속도:%d\n", target_spd);
+                    printf("��ǥ�ӵ�:%d\n", target_spd);
                 }
                 else if (STATUS_KEY == InputKey_SetAccel_Long && cruise_mode_status == 1) {
                     Accelerate(0, 1);
-                    printf("목표속도:%d\n", target_spd);
+                    printf("��ǥ�ӵ�:%d\n", target_spd);
                 }
                 else if (STATUS_KEY == InputKey_ResDecel_Short && cruise_mode_status == 1) {
                     Decelerate(1, 0);
-                    printf("목표속도:%d\n", target_spd);
+                    printf("��ǥ�ӵ�:%d\n", target_spd);
                 }
                 else if (STATUS_KEY == InputKey_ResDecel_Long && cruise_mode_status == 1) {
                     Decelerate(0, 1);
-                    printf("목표속도:%d\n", target_spd);
+                    printf("��ǥ�ӵ�:%d\n", target_spd);
                 }
                 else if ((STATUS_KEY == InputKey_SetAccel_Long || STATUS_KEY == InputKey_SetAccel_Short || STATUS_KEY == InputKey_ResDecel_Long || STATUS_KEY == InputKey_ResDecel_Short) && cruise_mode_status == 0) {
-                    printf("Cruise Mode OFF 상태입니다.\n");
+                    printf("Cruise Mode OFF �����Դϴ�.\n");
                 }
                 else if (STATUS_KEY == InputKey_Resume) {
                     cruise_mode_status = 1;
-                    printf("목표속도:%d\n", target_spd);
+                    printf("��ǥ�ӵ�:%d\n", target_spd);
                 }
                 else if (STATUS_KEY == InputKey_Exit) {
                     break;
+                }
+                else
+                {
+                	/* exception */
                 }
                 _getch();
             }
