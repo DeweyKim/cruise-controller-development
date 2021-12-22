@@ -62,7 +62,7 @@ bool cruise_mode(int current_spd, bool car_brake, bool cancel_button, bool cruis
     }
 
     else if (current_spd < 50) {
-        printf("±âÁØ¼Óµµ ¹Ì¸¸ÀÔ´Ï´Ù\n");
+        printf("ê¸°ì¤€ì†ë„ ë¯¸ë§Œìž…ë‹ˆë‹¤\n");
         return 0;
     }
 
@@ -199,7 +199,7 @@ int Press_Button_Interface() {
             }
             else return InputKey_Idle;
         }
-        else { //300ÀÌ»ó ´­¸° »óÅÂ¿¡¼­ ³ª¸ÓÁö extra time Ã³¸®
+        else { //300ì´ìƒ ëˆŒë¦° ìƒíƒœì—ì„œ ë‚˜ë¨¸ì§€ extra time ì²˜ë¦¬
             extra_time = 0;
             return InputKey_Idle;
         }
@@ -230,11 +230,11 @@ int alram_flag(bool veh_speed, bool veh_ready, bool lgon, bool can_fault, bool c
     bool can_timeout = false;
     bool cruise_button = false;
     */
-    if (veh_ready == false) {       //Â÷·® Ready ÇØÁ¦
+    if (veh_ready == false) {       //ì°¨ëŸ‰ Ready í•´ì œ
         alarmflag = 0x00;
         return alarmflag;
     }
-    if (lgon == false) {            //lgOn½ÅÈ£ Reset
+    if (lgon == false) {            //lgOnì‹ í˜¸ Reset
         alarmflag = 0x01;
         return alarmflag;
     }
@@ -246,7 +246,7 @@ int alram_flag(bool veh_speed, bool veh_ready, bool lgon, bool can_fault, bool c
         alarmflag = 0x03;
         return alarmflag;
     }
-    if (veh_speed < 50) {           // ÇöÀç Â÷¼Ó 50km ¹Ì¸¸ÀÎ °æ¿ì ¹öÆ° ÀÔ·Â ¹Þ¾ÒÀ» ¶§
+    if (veh_speed < 50) {           // í˜„ìž¬ ì°¨ì† 50km ë¯¸ë§Œì¸ ê²½ìš° ë²„íŠ¼ ìž…ë ¥ ë°›ì•˜ì„ ë•Œ
         if (cruise_button == true) {
             alarmflag = 0x04;
             return alarmflag;
@@ -256,15 +256,15 @@ int alram_flag(bool veh_speed, bool veh_ready, bool lgon, bool can_fault, bool c
 }
 int main(int argc, char* argv[]) {
 
-    bool car_brake = 0;         //ºê·¹ÀÌÅ© µ¿ÀÛ»óÅÂ
-    bool cancel_btn = 0;        //Cancel¹öÆ° µ¿ÀÛ»óÅÂ
-    bool cruise_btn = 1;        //Å©·çÁî¹öÆ° µ¿ÀÛ»óÅÂ
-    bool is_fault = 0;          //FaultÃ³¸®
+    bool car_brake = 0;         //ë¸Œë ˆì´í¬ ë™ìž‘ìƒíƒœ
+    bool cancel_btn = 0;        //Cancelë²„íŠ¼ ë™ìž‘ìƒíƒœ
+    bool cruise_btn = 1;        //í¬ë£¨ì¦ˆë²„íŠ¼ ë™ìž‘ìƒíƒœ
+    bool is_fault = 0;          //Faultì²˜ë¦¬
 
     eInputKey e;
     ButtonType b;
 
-    int STATUS_KEY = 0; // ÀÔ·Â¹öÆ° »óÅÂ °ª
+    int STATUS_KEY = 0; // ìž…ë ¥ë²„íŠ¼ ìƒíƒœ ê°’
 
     int value = 0;
 
@@ -285,26 +285,26 @@ int main(int argc, char* argv[]) {
                 }
                 else if (STATUS_KEY == InputKey_SetAccel_Short && cruise_mode_status == 1) {
                     Accelerate(1, 0);
-                    printf("¸ñÇ¥¼Óµµ:%d\n", target_spd);
+                    printf("ëª©í‘œì†ë„:%d\n", target_spd);
                 }
                 else if (STATUS_KEY == InputKey_SetAccel_Long && cruise_mode_status == 1) {
                     Accelerate(0, 1);
-                    printf("¸ñÇ¥¼Óµµ:%d\n", target_spd);
+                    printf("ëª©í‘œì†ë„:%d\n", target_spd);
                 }
                 else if (STATUS_KEY == InputKey_ResDecel_Short && cruise_mode_status == 1) {
                     Decelerate(1, 0);
-                    printf("¸ñÇ¥¼Óµµ:%d\n", target_spd);
+                    printf("ëª©í‘œì†ë„:%d\n", target_spd);
                 }
                 else if (STATUS_KEY == InputKey_ResDecel_Long && cruise_mode_status == 1) {
                     Decelerate(0, 1);
-                    printf("¸ñÇ¥¼Óµµ:%d\n", target_spd);
+                    printf("ëª©í‘œì†ë„:%d\n", target_spd);
                 }
                 else if ((STATUS_KEY == InputKey_SetAccel_Long || STATUS_KEY == InputKey_SetAccel_Short || STATUS_KEY == InputKey_ResDecel_Long || STATUS_KEY == InputKey_ResDecel_Short) && cruise_mode_status == 0) {
-                    printf("Cruise Mode OFF »óÅÂÀÔ´Ï´Ù.\n");
+                    printf("Cruise Mode OFF ìƒíƒœìž…ë‹ˆë‹¤.\n");
                 }
                 else if (STATUS_KEY == InputKey_Resume) {
                     cruise_mode_status = 1;
-                    printf("¸ñÇ¥¼Óµµ:%d\n", target_spd);
+                    printf("ëª©í‘œì†ë„:%d\n", target_spd);
                 }
                 else if (STATUS_KEY == InputKey_Exit) {
                     break;
@@ -330,5 +330,9 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    return 0;
-}
+    target_spd = -1;
+    printf("Cruise Mode Off\n");
+    printf("%d", current_spd);
+    
+	return 0;
+}   
