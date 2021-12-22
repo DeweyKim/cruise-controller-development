@@ -1,13 +1,23 @@
-﻿빌드 시작: 2021-12-21 오전 10:31:39
+﻿빌드 시작: 2021-12-22 오전 9:35:58
      1>2 노드의 "C:\Users\yhcho\Desktop\cruise-controller\cruise-controller-development\Project1\Project1.vcxproj" 프로젝트(Build 대상)입니다.
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TC /analyze- /errorReport:prompt main.c
          main.c
+     1>c:\users\yhcho\desktop\cruise-controller\cruise-controller-development\project1\main.c(163): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+     1>c:\users\yhcho\desktop\cruise-controller\cruise-controller-development\project1\main.c(206): warning C4047: '=': 'char'의 간접 참조 수준이 'char [5]'과(와) 다릅니다.
+     1>c:\users\yhcho\desktop\cruise-controller\cruise-controller-development\project1\main.c(210): warning C4047: '=': 'char'의 간접 참조 수준이 'char [5]'과(와) 다릅니다.
+     1>c:\users\yhcho\desktop\cruise-controller\cruise-controller-development\project1\main.c(214): warning C4047: '=': 'char'의 간접 참조 수준이 'char [5]'과(와) 다릅니다.
+     1>c:\users\yhcho\desktop\cruise-controller\cruise-controller-development\project1\main.c(218): warning C4047: '=': 'char'의 간접 참조 수준이 'char [5]'과(와) 다릅니다.
+     1>c:\users\yhcho\desktop\cruise-controller\cruise-controller-development\project1\main.c(223): warning C4047: '=': 'char'의 간접 참조 수준이 'char [5]'과(와) 다릅니다.
+     1>c:\users\yhcho\desktop\cruise-controller\cruise-controller-development\project1\main.c(237): warning C4101: 'b' :참조되지 않은 지역 변수입니다.
+     1>c:\users\yhcho\desktop\cruise-controller\cruise-controller-development\project1\main.c(236): warning C4101: 'e' :참조되지 않은 지역 변수입니다.
+     1>c:\users\yhcho\desktop\cruise-controller\cruise-controller-development\project1\main.c(194): warning C4715: 'Press_Button_Interface': 모든 제어 경로에서 값을 반환하지는 않습니다.
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\yhcho\Desktop\cruise-controller\cruise-controller-development\Project1\Debug\Project1.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\yhcho\Desktop\cruise-controller\cruise-controller-development\Project1\Debug\Project1.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\yhcho\Desktop\cruise-controller\cruise-controller-development\Project1\Debug\Project1.lib" /MACHINE:X86 Debug\main.obj
+         LINK : C:\Users\yhcho\Desktop\cruise-controller\cruise-controller-development\Project1\Debug\Project1.exe을(를) 찾을 수 없거나 마지막 증분 링크에 의해 빌드되지 않았습니다. 전체 링크를 수행하고 있습니다.
          Project1.vcxproj -> C:\Users\yhcho\Desktop\cruise-controller\cruise-controller-development\Project1\Debug\Project1.exe
      1>"C:\Users\yhcho\Desktop\cruise-controller\cruise-controller-development\Project1\Project1.vcxproj" 프로젝트를 빌드했습니다(Build 대상).
 
 빌드했습니다.
 
-경과 시간: 00:00:01.35
+경과 시간: 00:00:00.98
