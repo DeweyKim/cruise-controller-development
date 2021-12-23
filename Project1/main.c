@@ -280,82 +280,81 @@ int main(int argc, char* argv[]) {
     target_spd = current_spd;
 
     while (STATUS_KEY != InputKey_Exit) {
-        if (_kbhit()) {
-            STATUS_KEY = Press_Button_Interface();
-            while (STATUS_KEY != InputKey_Cancel && STATUS_KEY != InputKey_Brake) {
-                //STATUS_KEY = Press_Button_Interface();
-                if (STATUS_KEY == InputKey_Cruise) {
-                    cruise_btn = 1;
-                    cruise_mode_status = cruise_mode(current_spd, car_brake, cancel_btn, cruise_btn, is_fault);
-                    if (cruise_mode_status == 0) {
-                        current_spd = readInput(value);
-                        target_spd = current_spd;
-                    }
-                }
-                else if (STATUS_KEY == InputKey_SetAccel_Short && cruise_mode_status == 1) {
-                    Accelerate(1, 0);
-                    printf("목표속도:%d\n", target_spd);
-                }
-                else if (STATUS_KEY == InputKey_SetAccel_Long && cruise_mode_status == 1) {
-                    Accelerate(0, 1);
-                    printf("목표속도:%d\n", target_spd);
-                }
-                else if (STATUS_KEY == InputKey_ResDecel_Short && cruise_mode_status == 1) {
-                    Decelerate(1, 0);
-                    printf("목표속도:%d\n", target_spd);
-                }
-                else if (STATUS_KEY == InputKey_ResDecel_Long && cruise_mode_status == 1) {
-                    Decelerate(0, 1);
-                    printf("목표속도:%d\n", target_spd);
-                }
-                else if ((STATUS_KEY == InputKey_SetAccel_Long || STATUS_KEY == InputKey_SetAccel_Short || STATUS_KEY == InputKey_ResDecel_Long || STATUS_KEY == InputKey_ResDecel_Short) && cruise_mode_status == 0) {
-                    printf("Cruise Mode Off 상태입니다.\n");
-                }
-                else if (STATUS_KEY == InputKey_Resume) {
-                    cruise_btn = 1;
-                    cancel_btn = 0;
-                    car_brake = 0;
-                    cruise_mode_status = 1;
-                    printf("목표속도:%d\n", target_spd);
-                    _getch();
-                }
-                else if (STATUS_KEY == InputKey_Exit) {
-                    break;
-                }
-                else
-                {
-                    /* exception */
-                }
-
-                STATUS_KEY = Press_Button_Interface();
-                //_getch();
-            }
-            while (STATUS_KEY == InputKey_Cancel) {
-                car_brake = 0;
-                cancel_btn = 1;
-                cruise_btn = 0;
+        STATUS_KEY = Press_Button_Interface();
+        while (STATUS_KEY != InputKey_Cancel && STATUS_KEY != InputKey_Brake) {
+            //STATUS_KEY = Press_Button_Interface();
+            if (STATUS_KEY == InputKey_Cruise) {
+                cruise_btn = 1;
                 cruise_mode_status = cruise_mode(current_spd, car_brake, cancel_btn, cruise_btn, is_fault);
-                printf("000\n");
-                //_getch();
-                break;
+                if (cruise_mode_status == 0) {
+                    current_spd = readInput(value);
+                    target_spd = current_spd;
+                }
             }
-            while (STATUS_KEY == InputKey_Brake) {
-                car_brake = 1;
+            else if (STATUS_KEY == InputKey_SetAccel_Short && cruise_mode_status == 1) {
+                Accelerate(1, 0);
+                printf("목표속도:%d\n", target_spd);
+            }
+            else if (STATUS_KEY == InputKey_SetAccel_Long && cruise_mode_status == 1) {
+                Accelerate(0, 1);
+                printf("목표속도:%d\n", target_spd);
+            }
+            else if (STATUS_KEY == InputKey_ResDecel_Short && cruise_mode_status == 1) {
+                Decelerate(1, 0);
+                printf("목표속도:%d\n", target_spd);
+            }
+            else if (STATUS_KEY == InputKey_ResDecel_Long && cruise_mode_status == 1) {
+                Decelerate(0, 1);
+                printf("목표속도:%d\n", target_spd);
+            }
+            else if ((STATUS_KEY == InputKey_SetAccel_Long || STATUS_KEY == InputKey_SetAccel_Short || STATUS_KEY == InputKey_ResDecel_Long || STATUS_KEY == InputKey_ResDecel_Short) && cruise_mode_status == 0) {
+                printf("Cruise Mode Off 상태입니다.\n");
+            }
+            else if (STATUS_KEY == InputKey_Resume && cruise_mode_status == 0) {
+                cruise_btn = 1;
                 cancel_btn = 0;
-                cruise_btn = 0;
-                cruise_mode_status = cruise_mode(current_spd, car_brake, cancel_btn, cruise_btn, is_fault);
-                printf("001\n");
-                //_getch();
+                car_brake = 0;
+                cruise_mode_status = 1;
+                printf("목표속도:%d\n", target_spd);
+                _getch();
+            }
+            else if (STATUS_KEY == InputKey_Exit) {
                 break;
             }
-            /*while (STATUS_KEY == InputKey_Resume) {
-                STATUS_KEY = Press_Button_Interface();
-                break;
-            }*/
-            is_fault = alram_flag(current_spd, 1, 1, 0, 0, cruise_btn);
-            printf("Cruise Mode Off\n");
-            _getch();
+            else
+            {
+                /* exception */
+            }
+
+            STATUS_KEY = Press_Button_Interface();
+            //_getch();
         }
+        while (STATUS_KEY == InputKey_Cancel) {
+            car_brake = 0;
+            cancel_btn = 1;
+            cruise_btn = 0;
+            cruise_mode_status = cruise_mode(current_spd, car_brake, cancel_btn, cruise_btn, is_fault);
+            printf("000\n");
+            //_getch();
+            break;
+        }
+        while (STATUS_KEY == InputKey_Brake) {
+            car_brake = 1;
+            cancel_btn = 0;
+            cruise_btn = 0;
+            cruise_mode_status = cruise_mode(current_spd, car_brake, cancel_btn, cruise_btn, is_fault);
+            printf("001\n");
+            //_getch();
+            break;
+        }
+        /*while (STATUS_KEY == InputKey_Resume) {
+            STATUS_KEY = Press_Button_Interface();
+            break;
+        }*/
+        is_fault = alram_flag(current_spd, 1, 1, 0, 0, cruise_btn);
+        printf("Cruise Mode Off\n");
+        _getch();
+
     }
 
     return 0;
