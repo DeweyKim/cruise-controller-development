@@ -67,16 +67,17 @@ int8_t cruise_mode(int8_t spd, int8_t car_brake, int8_t cancel_button, int8_t cr
         mode = 0;
     }
 
-    else if (spd < 50) {
-        printf("기준속도 미만입니다\n");
-        mode = 0;
-    }
-
     else if ((spd >= 50) && (cruise_button == 1)) {
         printf("Cruise Mode On\n");
         target_spd = spd;
         mode = 1;
     }
+	
+    else if (spd < 50) {
+        printf("기준속도 미만입니다\n");
+        mode = 0;
+    }
+
     else
     {
         /* exception */
