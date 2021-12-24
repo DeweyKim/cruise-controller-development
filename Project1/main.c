@@ -165,8 +165,7 @@ void main() {
             cruise_btn = 1;
             cruise_mode_status = cruise_mode(current_spd, car_brake, cancel_btn, cruise_btn, is_fault);
             if (cruise_mode_status == 0) {
-                current_spd = readInput(value);
-                target_spd = current_spd;
+                STATUS_KEY = GetCurrentInputKey();
             }
         }
         else if ((STATUS_KEY == InputKey_SetAccel_Short) && (cruise_mode_status == 1)) {
