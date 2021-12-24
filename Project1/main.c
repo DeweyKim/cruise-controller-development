@@ -13,7 +13,6 @@
 #define false 0
 
 typedef int int8_t;
-typedef float float8_t;
 
 typedef enum {
     CRUISE = 0,
@@ -22,7 +21,7 @@ typedef enum {
     RES
 };
 
-int8_t cruise_mode(int8_t current_spd, int8_t car_brake, int8_t cancel_button, int8_t cruise_button, int8_t is_fault);
+int8_t cruise_mode(int8_t spd, int8_t car_brake, int8_t cancel_button, int8_t cruise_button, int8_t is_fault);
 static int8_t Accelerate(int8_t Short, int8_t Long);
 static int8_t Decelerate(int8_t Short, int8_t Long);
 //static int8_t readInput(int8_t value);
@@ -102,43 +101,25 @@ static int8_t Decelerate(int8_t Short, int8_t Long) {
 
     return target_spd;
 }
-/*static int8_t readInput(int8_t value)
-{
-    printf("Input Current Speed : ");
-    scanf("%d", &value);
-    return value;
-}*/
 static int8_t alram_flag(int8_t veh_speed, int8_t veh_ready, int8_t lgon, int8_t can_fault, int8_t can_timeout, int8_t cruise_button)
 {
-    int8_t alarmflag;
-    /*int8_t veh_speed = 0;
-    int8_t veh_ready = true;
-    int8_t lgon = true;
-    int8_t can_fault = false;
-    int8_t can_timeout = false;
-    int8_t cruise_button = false;
-    */
+    int8_t alarmflag = defAlarmFlag_invalid;
 
     if (veh_ready == false) {       //차량 Ready 해제
-        alarmflag = 0x00;
-        return alarmflag;
+        alarmflag |= defAlarmFlag_vehReady;
     }
     if (lgon == false) {            //lgOn신호 Reset
-        alarmflag = 0x01;
-        return alarmflag;
+        alarmflag |= defAlarmFlag_IgOn;
     }
     if (can_fault == true) {        //Can Fault
-        alarmflag = 0x02;
-        return alarmflag;
+        alarmflag |= defAlarmFlag_canFault;
     }
     if (can_timeout == true) {      //Can Timeout
-        alarmflag = 0x03;
-        return alarmflag;
+        alarmflag |= defAlarmFlag_canTimeout;
     }
     if (veh_speed < 50) {           // 현재 차속 50km 미만인 경우 버튼 입력 받았을 때
         if (cruise_button == true) {
-            alarmflag = 0x04;
-            return alarmflag;
+            alarmflag |= defAlarmFlag_vehSpeed;
         }
     }
     return 0;
@@ -169,16 +150,16 @@ void main() {
             }
         }
         else if ((STATUS_KEY == InputKey_SetAccel_Short) && (cruise_mode_status == 1)) {
-             Accelerate(1, 0);
+            target_spd = Accelerate(1, 0);
         }
         else if ((STATUS_KEY == InputKey_SetAccel_Long) && (cruise_mode_status == 1)) {
-            Accelerate(0, 1);
+            target_spd = Accelerate(0, 1);
         }
         else if ((STATUS_KEY == InputKey_ResDecel_Short) && (cruise_mode_status == 1)) {
-            Decelerate(1, 0);
+            target_spd = Decelerate(1, 0);
         }
         else if ((STATUS_KEY == InputKey_ResDecel_Long) && (cruise_mode_status == 1)) {
-            Decelerate(0, 1);
+            target_spd = Decelerate(0, 1);
         }
         else if (STATUS_KEY == InputKey_Brake) {
             if (cruise_mode_status == 1) {
@@ -221,5 +202,4 @@ void main() {
         }
         is_fault = alram_flag(current_spd, 1, 1, 0, 0, cruise_btn);
     }
-
 }
